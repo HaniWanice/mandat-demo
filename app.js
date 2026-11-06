@@ -355,11 +355,13 @@ function viewProspects() {
     <div class="bar-tools">
       <div class="row-tools">
         <label class="search" data-tip="Nom, ville, code postal, secteur ou dirigeant. Raccourci : /"><svg class="ic"><use href="#i-search"/></svg><input id="q" type="search" placeholder="Rechercher un établissement" value="${esc(state.q)}" aria-label="Rechercher"></label>
+        <div class="filters">
         <div class="seg" id="segTaille" role="group" aria-label="Taille" data-tip="Dès 50 salariés, les titulaires ont aussi droit à la formation économique."><span class="seg-ind"></span>
           ${[["", "Toutes tailles"], ["50", "50 sal. et +"], ["moins", "Moins de 50"]].map(([v, l]) => `<button type="button" data-taille="${v}" aria-pressed="${state.taille === v}">${l}</button>`).join("")}</div>
         <select class="select" id="fSecteur" aria-label="Secteur">${opt("", "Tous les secteurs", state.secteur)}${sectors.map((s) => opt(s, s, state.secteur)).join("")}</select>
         <select class="select" id="fStatut" aria-label="Suivi">${opt("", "Tout le suivi", state.statut)}${STATUSES.map(([v, l]) => opt(v, l, state.statut)).join("")}</select>
         <select class="select" id="fSort" aria-label="Trier">${opt("mois", "Trier : élection", state.sort)}${opt("inscrits", "Trier : électeurs", state.sort)}${opt("entreprise", "Trier : nom", state.sort)}</select>
+        </div>
       </div>
       <div class="chips" id="chipsMois">
         <button class="chip" type="button" data-mois="" aria-pressed="${!state.mois}">Tous les mois <small>${ROWS.length}</small></button>
@@ -611,7 +613,7 @@ function viewAssistant() {
     <header class="page-head stag"><div style="--i:0"><h1>Assistant</h1><p>Une question en français, une réponse courte. Sur le droit du CSE, chaque réponse cite l'article du Code du travail.</p></div></header>
     <div class="chat stag">
       <section class="chatbox" style="--i:1"><div class="msgs" id="msgs" aria-live="polite">
-        <div class="msg bot"><p>Bonjour. Je connais vos ${ROWS.length} prospects et quatre points du droit du CSE. Choisissez une question à droite, ou écrivez la vôtre.</p></div></div>
+        <div class="msg bot"><p>Bonjour. Je connais vos ${ROWS.length} prospects et quatre points du droit du CSE. Choisissez une question dans la liste, ou écrivez la vôtre.</p></div></div>
         <form class="composer" id="ask"><input id="askIn" placeholder="Ex. qui a droit à la formation économique ?" aria-label="Votre question" autocomplete="off"><button class="btn brand" aria-label="Envoyer"><svg class="ic"><use href="#i-send"/></svg></button></form>
       </section>
       <aside class="side">
@@ -756,6 +758,7 @@ function doExport(kind, src = filtered()) {
 /* ---------- Tooltip ---------- */
 
 function initTips() {
+  if (matchMedia("(hover: none)").matches) return; // touch screens: no hover, so no tooltips getting in the way
   const tip = $("#tip");
   let cur = null, timer;
   const hide = () => { tip.classList.remove("on"); cur = null; clearTimeout(timer); };
@@ -826,6 +829,12 @@ function refreshList() {
 document.addEventListener("change", (e) => {
   if (e.target.matches(".stsel")) { save(e.target.dataset.siret, { s: e.target.value }); e.target.dataset.s = e.target.value; e.target.closest(".prow")?.classList.toggle("dim", e.target.value === "ecarte"); toast(`Suivi : ${STATUS_LABEL[e.target.value]}`); }
 });
+document.addEventListener("beforetoggle", (e) => {
+  if (e.target.id !== "exportMenu" || e.newState !== "open") return;
+  const b = $("[popovertarget=exportMenu]").getBoundingClientRect(), m = e.target;
+  m.style.top = b.bottom + 8 + "px";
+  m.style.right = innerWidth - b.right + "px";
+}, true);
 document.addEventListener("input", (e) => { if (e.target.id === "note") save(e.target.dataset.siret, { n: e.target.value }); });
 $("#cmdIn").addEventListener("input", () => { cmdSel = 0; renderCmd(); });
 $("#sheet").addEventListener("click", (e) => { if (e.target.id === "sheet") $("#sheet").close(); });
