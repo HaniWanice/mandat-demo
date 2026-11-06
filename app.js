@@ -68,7 +68,7 @@ async function unlock(e) {
     localStorage.setItem(KEY_STORE, btoa(String.fromCharCode(...raw)));
     $("#lock").classList.add("leave");
     start(data);
-    setTimeout(() => { $("#lock").hidden = true; }, 1300);
+    setTimeout(() => { $("#lock").hidden = true; }, 900);
   } catch {
     go.classList.remove("busy");
     $("#lockErr").classList.add("on");
@@ -120,8 +120,8 @@ function countUp(root = document) {
   $$("[data-count]", root).forEach((el) => {
     const end = +el.dataset.count;
     el.removeAttribute("data-count");
-    if (reduced || end < 10) { el.textContent = fmt(end); return; }
-    const t0 = performance.now(), dur = 2200;
+    if (end < 10) { el.textContent = fmt(end); return; }
+    const t0 = performance.now(), dur = reduced ? 900 : 1500;
     const tick = (t) => {
       const p = Math.min(1, (t - t0) / dur);
       el.textContent = fmt(Math.round(end * (1 - Math.pow(2, -10 * p))));
@@ -178,8 +178,8 @@ const TITLES = { accueil: "Accueil", prospects: "Prospects", calendrier: "Calend
 let curtainRun = Promise.resolve();
 
 // One full-screen sweep per page change: the curtain rises, names the page, swaps it underneath, then lifts away.
+// With reduced motion the sweep becomes a short fade, so the page change is still announced without movement.
 function curtain(title, sub, swap, intro) {
-  if (reduced) { swap(); return; }
   curtainRun = curtainRun.then(async () => {
     const c = $("#curtain"), kids = $$(".c-in > *", c);
     $("#curtainTitle").textContent = title;
@@ -187,15 +187,18 @@ function curtain(title, sub, swap, intro) {
     c.hidden = false;
     const ease = "cubic-bezier(.76,0,.24,1)";
     const instant = intro && $("#lock").hidden; // reload with a remembered code: start fully covered
-    await c.animate([{ clipPath: "inset(100% 0 0 0 round 40px)" }, { clipPath: "inset(0 0 0 0 round 0px)" }], { duration: instant ? 10 : 750, easing: ease, fill: "forwards" }).finished;
-    kids.forEach((k, i) => k.animate([{ opacity: 0, transform: "translateY(30px)" }, { opacity: 1, transform: "none" }], { duration: 700, delay: i * 110, easing: "cubic-bezier(.16,1,.3,1)", fill: "forwards" }));
-    await new Promise((r) => setTimeout(r, intro ? 1300 : 650));
+    const cover = reduced ? [{ opacity: 0, clipPath: "inset(0)" }, { opacity: 1, clipPath: "inset(0)" }] : [{ clipPath: "inset(100% 0 0 0 round 40px)" }, { clipPath: "inset(0 0 0 0 round 0px)" }];
+    const uncover = reduced ? [{ opacity: 1, clipPath: "inset(0)" }, { opacity: 0, clipPath: "inset(0)" }] : [{ clipPath: "inset(0 0 0 0 round 0px)" }, { clipPath: "inset(0 0 100% 0 round 40px)" }];
+    const lift = reduced ? 0 : 1;
+    await c.animate(cover, { duration: instant ? 10 : 260, easing: ease, fill: "forwards" }).finished;
+    kids.forEach((k, i) => k.animate([{ opacity: 0, transform: `translateY(${14 * lift}px)` }, { opacity: 1, transform: "none" }], { duration: 280, delay: i * 40, easing: "cubic-bezier(.16,1,.3,1)", fill: "forwards" }));
+    await new Promise((r) => setTimeout(r, intro ? 700 : 200));
     $("#main").classList.add("held");
     swap();
-    kids.forEach((k, i) => k.animate([{ opacity: 1, transform: "none" }, { opacity: 0, transform: "translateY(-24px)" }], { duration: 450, delay: i * 60, easing: "cubic-bezier(.7,0,.84,0)", fill: "forwards" }));
-    await new Promise((r) => setTimeout(r, 350));
+    kids.forEach((k, i) => k.animate([{ opacity: 1, transform: "none" }, { opacity: 0, transform: `translateY(${-10 * lift}px)` }], { duration: 160, delay: i * 25, easing: "cubic-bezier(.7,0,.84,0)", fill: "forwards" }));
+    await new Promise((r) => setTimeout(r, 120));
     $("#main").classList.remove("held");
-    await c.animate([{ clipPath: "inset(0 0 0 0 round 0px)" }, { clipPath: "inset(0 0 100% 0 round 40px)" }], { duration: 850, easing: ease, fill: "forwards" }).finished;
+    await c.animate(uncover, { duration: 320, easing: ease, fill: "forwards" }).finished;
     c.hidden = true;
   });
 }
@@ -304,14 +307,13 @@ function viewHome() {
 async function typewriter(el, phrases) {
   if (!el || !phrases.length) return;
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
-  if (reduced) { el.textContent = phrases[0]; return; }
-  await wait(1200);
+  await wait(800);
   for (let i = 0; el.isConnected; i = (i + 1) % phrases.length) {
     const p = phrases[i];
-    for (let k = 1; k <= p.length && el.isConnected; k++) { el.textContent = p.slice(0, k); await wait(55 + Math.random() * 40); }
-    await wait(2200);
-    for (let k = p.length; k >= 0 && el.isConnected; k--) { el.textContent = p.slice(0, k); await wait(22); }
-    await wait(450);
+    for (let k = 1; k <= p.length && el.isConnected; k++) { el.textContent = p.slice(0, k); await wait(42 + Math.random() * 30); }
+    await wait(1900);
+    for (let k = p.length; k >= 0 && el.isConnected; k--) { el.textContent = p.slice(0, k); await wait(18); }
+    await wait(350);
   }
 }
 
@@ -405,11 +407,11 @@ function renderRows(first = false) {
   $$(".prow", list).forEach((el, i) => {
     const old = before.get(el.dataset.siret);
     if (first || old === undefined) {
-      if (i < 14) el.animate([{ opacity: 0, transform: "translateY(18px) scale(.98)" }, { opacity: 1, transform: "none" }], { duration: 1000, delay: i * 60, easing: "cubic-bezier(.16,1,.3,1)", fill: "backwards" });
+      if (i < 14) el.animate([{ opacity: 0, transform: "translateY(18px) scale(.98)" }, { opacity: 1, transform: "none" }], { duration: 650, delay: i * 40, easing: "cubic-bezier(.16,1,.3,1)", fill: "backwards" });
       return;
     }
     const dy = old - el.getBoundingClientRect().top;
-    if (Math.abs(dy) > 1 && Math.abs(dy) < innerHeight * 1.5) el.animate([{ transform: `translateY(${dy}px)` }, { transform: "none" }], { duration: 900, easing: getComputedStyle(document.documentElement).getPropertyValue("--spring-soft").trim() || "ease-out" });
+    if (Math.abs(dy) > 1 && Math.abs(dy) < innerHeight * 1.5) el.animate([{ transform: `translateY(${dy}px)` }, { transform: "none" }], { duration: 600, easing: getComputedStyle(document.documentElement).getPropertyValue("--spring-soft").trim() || "ease-out" });
   });
 }
 
@@ -535,7 +537,7 @@ function verdict(v) {
   if (card) {
     card.dataset.gone = "1";
     card.classList.add({ appele: "fly-ok", rappeler: "fly-later", ecarte: "fly-no" }[v]);
-    setTimeout(() => card.remove(), 1000);
+    setTimeout(() => card.remove(), 700);
   }
   const btn = $(`[data-verdict="${v}"]`);
   btn?.animate([{ transform: "scale(.9)" }, { transform: "scale(1.06)" }, { transform: "none" }], { duration: 450, easing: "cubic-bezier(.16,1,.3,1)" });
@@ -635,7 +637,7 @@ function ask(q) {
     if (!t) return;
     t.outerHTML = `<div class="msg bot">${answer(q)}</div>`;
     box.scrollTo({ top: box.scrollHeight, behavior: "smooth" });
-  }, reduced ? 0 : 1100);
+  }, reduced ? 300 : 750);
 }
 
 /* ---------- Method ---------- */
