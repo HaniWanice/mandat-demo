@@ -68,7 +68,7 @@ async function unlock(e) {
     localStorage.setItem(KEY_STORE, btoa(String.fromCharCode(...raw)));
     $("#lock").classList.add("leave");
     start(data);
-    setTimeout(() => { $("#lock").hidden = true; }, 800);
+    setTimeout(() => { $("#lock").hidden = true; }, 1300);
   } catch {
     go.classList.remove("busy");
     $("#lockErr").classList.add("on");
@@ -108,7 +108,7 @@ function toast(msg) {
   t.className = "toast";
   t.innerHTML = `<i><svg class="ic"><use href="#i-check"/></svg></i>${esc(msg)}`;
   $("#toasts").append(t);
-  setTimeout(() => { t.classList.add("out"); setTimeout(() => t.remove(), 320); }, 2200);
+  setTimeout(() => { t.classList.add("out"); setTimeout(() => t.remove(), 500); }, 2800);
 }
 
 async function copy(text, msg) {
@@ -121,13 +121,14 @@ function countUp(root = document) {
     const end = +el.dataset.count;
     el.removeAttribute("data-count");
     if (reduced || end < 10) { el.textContent = fmt(end); return; }
-    const t0 = performance.now(), dur = 1200;
+    const t0 = performance.now(), dur = 2200;
     const tick = (t) => {
       const p = Math.min(1, (t - t0) / dur);
       el.textContent = fmt(Math.round(end * (1 - Math.pow(2, -10 * p))));
       if (p < 1) requestAnimationFrame(tick); else el.textContent = fmt(end);
     };
-    requestAnimationFrame(tick);
+    const begin = () => ($("#main").classList.contains("held") ? setTimeout(begin, 60) : requestAnimationFrame(tick));
+    begin();
   });
 }
 
@@ -160,15 +161,43 @@ function route() {
   const [name, query] = location.hash.replace(/^#\/?/, "").split("?");
   const v = VIEWS[name] ? name : "accueil";
   if (query) new URLSearchParams(query).forEach((val, k) => { if (k in state) state[k] = val; });
+  const first = !currentView;
   const swap = () => {
     $$("#tabs a").forEach((a) => (a.dataset.view === v ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current")));
-    moveTabInd();
     VIEWS[v]();
+    moveTabInd();
     if (currentView !== v) window.scrollTo({ top: 0 });
     currentView = v;
   };
-  if (document.startViewTransition && currentView && currentView !== v && !reduced) document.startViewTransition(swap);
-  else swap();
+  if (currentView === v) return swap();
+  currentView = v;
+  curtain(first ? "Mandat" : TITLES[v], first ? "Élections CSE 2027" : "", swap, first);
+}
+
+const TITLES = { accueil: "Accueil", prospects: "Prospects", calendrier: "Calendrier 2027", assistant: "Assistant", methode: "Méthode" };
+let curtainRun = Promise.resolve();
+
+// One full-screen sweep per page change: the curtain rises, names the page, swaps it underneath, then lifts away.
+function curtain(title, sub, swap, intro) {
+  if (reduced) { swap(); return; }
+  curtainRun = curtainRun.then(async () => {
+    const c = $("#curtain"), kids = $$(".c-in > *", c);
+    $("#curtainTitle").textContent = title;
+    $("#curtainSub").textContent = sub;
+    c.hidden = false;
+    const ease = "cubic-bezier(.76,0,.24,1)";
+    const instant = intro && $("#lock").hidden; // reload with a remembered code: start fully covered
+    await c.animate([{ clipPath: "inset(100% 0 0 0 round 40px)" }, { clipPath: "inset(0 0 0 0 round 0px)" }], { duration: instant ? 10 : 750, easing: ease, fill: "forwards" }).finished;
+    kids.forEach((k, i) => k.animate([{ opacity: 0, transform: "translateY(30px)" }, { opacity: 1, transform: "none" }], { duration: 700, delay: i * 110, easing: "cubic-bezier(.16,1,.3,1)", fill: "forwards" }));
+    await new Promise((r) => setTimeout(r, intro ? 1300 : 650));
+    $("#main").classList.add("held");
+    swap();
+    kids.forEach((k, i) => k.animate([{ opacity: 1, transform: "none" }, { opacity: 0, transform: "translateY(-24px)" }], { duration: 450, delay: i * 60, easing: "cubic-bezier(.7,0,.84,0)", fill: "forwards" }));
+    await new Promise((r) => setTimeout(r, 350));
+    $("#main").classList.remove("held");
+    await c.animate([{ clipPath: "inset(0 0 0 0 round 0px)" }, { clipPath: "inset(0 0 100% 0 round 40px)" }], { duration: 850, easing: ease, fill: "forwards" }).finished;
+    c.hidden = true;
+  });
 }
 
 function moveTabInd() {
@@ -227,8 +256,9 @@ function viewHome() {
       <div class="hero-in stag">
         <span class="date" style="--i:0"><i></i>${capital(day)}</span>
         <h1 style="--i:1"><span class="hl" data-count="${due.length}">${due.length}</span> CSE votent dans les ${WINDOW} prochains mois.</h1>
-        <p style="--i:2">Sur vos ${ROWS.length} établissements en ${esc(D.region)}. Le vote se prépare un à trois mois avant : c'est le moment d'appeler, avant les autres organismes.</p>
-        <div class="acts" style="--i:3">
+        <div class="typer" style="--i:2" data-tip="Les prochains établissements à appeler, tirés de votre liste."><b>À appeler</b><span id="typed"></span></div>
+        <p style="--i:3">Sur vos ${ROWS.length} établissements en ${esc(D.region)}. Le vote se prépare un à trois mois avant : c'est le moment d'appeler, avant les autres organismes.</p>
+        <div class="acts" style="--i:4">
           <button class="btn primary lg" type="button" data-session ${queue.length ? "" : "disabled"}><svg class="ic"><use href="#i-phone"/></svg>Lancer la session d'appels<kbd style="background:rgba(255,255,255,.14);color:#fff">${queue.length}</kbd></button>
           <a class="btn lg" href="#/prospects">Voir les prospects</a>
         </div>
@@ -267,6 +297,22 @@ function viewHome() {
       </section>
     </div></div>`;
   countUp();
+  typewriter($("#typed"), due.slice(0, 8).map((r) => `${r.entreprise} · ${cityCase(r.ville)} · vote en ${monthLabel(r.mois)}`));
+}
+
+// Types each phrase, holds it, erases it, then moves on; stops by itself once the view is gone.
+async function typewriter(el, phrases) {
+  if (!el || !phrases.length) return;
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  if (reduced) { el.textContent = phrases[0]; return; }
+  await wait(1200);
+  for (let i = 0; el.isConnected; i = (i + 1) % phrases.length) {
+    const p = phrases[i];
+    for (let k = 1; k <= p.length && el.isConnected; k++) { el.textContent = p.slice(0, k); await wait(55 + Math.random() * 40); }
+    await wait(2200);
+    for (let k = p.length; k >= 0 && el.isConnected; k--) { el.textContent = p.slice(0, k); await wait(22); }
+    await wait(450);
+  }
 }
 
 /* ---------- Prospects ---------- */
@@ -357,11 +403,11 @@ function renderRows(first = false) {
   $$(".prow", list).forEach((el, i) => {
     const old = before.get(el.dataset.siret);
     if (first || old === undefined) {
-      if (i < 14) el.animate([{ opacity: 0, transform: "translateY(18px) scale(.98)" }, { opacity: 1, transform: "none" }], { duration: 650, delay: i * 30, easing: "cubic-bezier(.16,1,.3,1)", fill: "backwards" });
+      if (i < 14) el.animate([{ opacity: 0, transform: "translateY(18px) scale(.98)" }, { opacity: 1, transform: "none" }], { duration: 1000, delay: i * 60, easing: "cubic-bezier(.16,1,.3,1)", fill: "backwards" });
       return;
     }
     const dy = old - el.getBoundingClientRect().top;
-    if (Math.abs(dy) > 1 && Math.abs(dy) < innerHeight * 1.5) el.animate([{ transform: `translateY(${dy}px)` }, { transform: "none" }], { duration: 600, easing: getComputedStyle(document.documentElement).getPropertyValue("--spring-soft").trim() || "ease-out" });
+    if (Math.abs(dy) > 1 && Math.abs(dy) < innerHeight * 1.5) el.animate([{ transform: `translateY(${dy}px)` }, { transform: "none" }], { duration: 900, easing: getComputedStyle(document.documentElement).getPropertyValue("--spring-soft").trim() || "ease-out" });
   });
 }
 
@@ -487,7 +533,7 @@ function verdict(v) {
   if (card) {
     card.dataset.gone = "1";
     card.classList.add({ appele: "fly-ok", rappeler: "fly-later", ecarte: "fly-no" }[v]);
-    setTimeout(() => card.remove(), 650);
+    setTimeout(() => card.remove(), 1000);
   }
   const btn = $(`[data-verdict="${v}"]`);
   btn?.animate([{ transform: "scale(.9)" }, { transform: "scale(1.06)" }, { transform: "none" }], { duration: 450, easing: "cubic-bezier(.16,1,.3,1)" });
@@ -587,7 +633,7 @@ function ask(q) {
     if (!t) return;
     t.outerHTML = `<div class="msg bot">${answer(q)}</div>`;
     box.scrollTo({ top: box.scrollHeight, behavior: "smooth" });
-  }, reduced ? 0 : 650);
+  }, reduced ? 0 : 1100);
 }
 
 /* ---------- Method ---------- */
