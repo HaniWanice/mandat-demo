@@ -2,75 +2,92 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<title>Mandat · élections CSE 2027</title>
-<link rel="preload" href="fonts/plex-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/plex-600.woff2" as="font" type="font/woff2" crossorigin>
+<meta name="theme-color" content="#F5F5F7">
+<title>Mandat</title>
+<link rel="preload" href="fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2317202B'/%3E%3Cpath d='M9 22V10l7 7 7-7v12' fill='none' stroke='%23F2B33D' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236D5BFF'/%3E%3Cstop offset='1' stop-color='%23FF5DA2'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='9' fill='url(%23g)'/%3E%3Cpath d='M9 22V11l7 6.5L23 11v11' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
-    <symbol id="i-logo" viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="currentColor"/><path d="M9 22V10l7 7 7-7v12" fill="none" stroke="#F2B33D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-    <symbol id="i-dash" viewBox="0 0 24 24"><path d="M4 13h6V4H4zM14 20h6v-9h-6zM4 20h6v-4H4zM14 4v4h6V4z"/></symbol>
-    <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01"/></symbol>
-    <symbol id="i-grad" viewBox="0 0 24 24"><path d="M2.5 9 12 4.5 21.5 9 12 13.5zM6.5 11v4.5c0 1.5 2.5 3 5.5 3s5.5-1.5 5.5-3V11M21.5 9v5"/></symbol>
-    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M5 18.5V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H9z"/><path d="M9 9h6M9 12h4"/></symbol>
+    <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6D5BFF"/><stop offset="1" stop-color="#FF5DA2"/></linearGradient>
+    <symbol id="logo" viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="url(#lg)"/><path d="M9 22V11l7 6.5L23 11v11" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V19a1 1 0 0 1-1 1h-4.5v-5.5h-5V20H5a1 1 0 0 1-1-1z"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6.5h11M9 12h11M9 17.5h11"/><circle cx="4.75" cy="6.5" r="1"/><circle cx="4.75" cy="12" r="1"/><circle cx="4.75" cy="17.5" r="1"/></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3.5c.6 4.2 2.3 5.9 6.5 6.5-4.2.6-5.9 2.3-6.5 6.5-.6-4.2-2.3-5.9-6.5-6.5 4.2-.6 5.9-2.3 6.5-6.5zM18.5 15.5c.3 1.7 1 2.4 2.5 2.7-1.5.3-2.2 1-2.5 2.6-.3-1.6-1-2.3-2.5-2.6 1.5-.3 2.2-1 2.5-2.7z"/></symbol>
     <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5z"/></symbol>
-    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
     <symbol id="i-phone" viewBox="0 0 24 24"><path d="M6.5 3.5h3l1.5 4-2 1.5a11 11 0 0 0 6 6l1.5-2 4 1.5v3a2 2 0 0 1-2 2A16 16 0 0 1 4.5 5.5a2 2 0 0 1 2-2z"/></symbol>
-    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="m4 7 8 6 8-6"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="13" rx="2.5"/><path d="m4 7.5 8 5.5 8-5.5"/></symbol>
     <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.5 3.5 5.5 3.5 8.5s-1 6-3.5 8.5c-2.5-2.5-3.5-5.5-3.5-8.5s1-6 3.5-8.5z"/></symbol>
     <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6.5-5.5-6.5-11a6.5 6.5 0 0 1 13 0C18.5 15.5 12 21 12 21z"/><circle cx="12" cy="10" r="2.3"/></symbol>
-    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="11" height="11" rx="2"/><path d="M15.5 8.5V6a1.5 1.5 0 0 0-1.5-1.5H6A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h2.5"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="11" height="11" rx="2.5"/><path d="M15.5 8.5V6.5a2 2 0 0 0-2-2h-7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h2"/></symbol>
     <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v11m-5-5 5 5 5-5M5 19.5h14"/></symbol>
-    <symbol id="i-cal" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14" rx="2"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></symbol>
-    <symbol id="i-x" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="m6.5 6.5 11 11M17.5 6.5l-11 11"/></symbol>
     <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></symbol>
-    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 19.5c1-3.5 3.8-5 7-5s6 1.5 7 5"/></symbol>
-    <symbol id="i-send" viewBox="0 0 24 24"><path d="M4 12 20 4l-4 16-4-6.5z"/><path d="m12 13.5 8-9.5"/></symbol>
-    <symbol id="i-ext" viewBox="0 0 24 24"><path d="M14 4.5h5.5V10M19.5 4.5 11 13M17 14v4.5A1.5 1.5 0 0 1 15.5 20h-10A1.5 1.5 0 0 1 4 18.5v-10A1.5 1.5 0 0 1 5.5 7H10"/></symbol>
-    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5m6-6-6 6 6 6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+    <symbol id="i-skip" viewBox="0 0 24 24"><path d="M5 6.5 13 12l-8 5.5zM19 6v12"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="M12 19V5m-6 6 6-6 6 6"/></symbol>
+    <symbol id="i-ext" viewBox="0 0 24 24"><path d="M14 4.5h5.5V10M19.5 4.5 11 13M17 14v4.5a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 4 18.5v-10A1.5 1.5 0 0 1 5.5 7H10"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 4v16M7 20h10M5 7h14M5 7l-2.5 6a2.5 2.5 0 0 0 5 0zM19 7l-2.5 6a2.5 2.5 0 0 0 5 0z"/></symbol>
+    <symbol id="i-cmd" viewBox="0 0 24 24"><path d="M9 6.5A2.5 2.5 0 1 0 6.5 9H9zm0 0v11m0-11h6m-6 11a2.5 2.5 0 1 1-2.5-2.5H9zm6-11a2.5 2.5 0 1 1 2.5 2.5H15zm0 0v11m0 0a2.5 2.5 0 1 0 2.5-2.5H15zM9 9h6M9 15h6"/></symbol>
   </defs>
 </svg>
 
-<main id="lock" class="lock" hidden>
+<div id="lock" class="lock" hidden>
+  <div class="mesh" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
   <form id="lockForm" class="lock-card" autocomplete="off">
-    <svg class="lock-logo" aria-hidden="true"><use href="#i-logo"/></svg>
+    <svg class="lock-logo" aria-hidden="true"><use href="#logo"/></svg>
     <h1>Mandat</h1>
-    <p>Le calendrier des élections CSE 2027, pour les organismes de formation. Démo privée.</p>
-    <label for="pw">Code d'accès</label>
-    <input id="pw" type="password" required autocomplete="current-password" spellcheck="false">
-    <p id="lockErr" class="lock-err" role="alert" hidden>Ce code ne fonctionne pas. Vérifiez les tirets et réessayez.</p>
-    <button class="btn primary" type="submit" id="lockBtn">Ouvrir la démo</button>
-    <p class="lock-foot">Le code n'est demandé qu'une fois sur cet appareil.</p>
-  </form>
-</main>
-
-<div id="app" class="app" hidden>
-  <aside class="rail" aria-label="Navigation">
-    <a class="brand" href="#/tableau"><svg aria-hidden="true"><use href="#i-logo"/></svg><span>Mandat</span></a>
-    <button class="rail-toggle" id="railToggle" type="button" aria-label="Menu" aria-expanded="false"><svg class="ic"><use href="#i-menu"/></svg></button>
-    <nav id="nav">
-      <a href="#/tableau" data-view="tableau"><svg class="ic"><use href="#i-dash"/></svg>Tableau de bord</a>
-      <a href="#/prospects" data-view="prospects"><svg class="ic"><use href="#i-list"/></svg>Prospects<span class="count" id="navCount"></span></a>
-      <a href="#/formations" data-view="formations"><svg class="ic"><use href="#i-grad"/></svg>Formations</a>
-      <a href="#/assistant" data-view="assistant"><svg class="ic"><use href="#i-chat"/></svg>Assistant</a>
-      <a href="#/methode" data-view="methode"><svg class="ic"><use href="#i-book"/></svg>Comment c'est fait</a>
-    </nav>
-    <div class="rail-foot">
-      <p>Démo · données au <span id="gen"></span></p>
-      <button class="link" id="logout" type="button" data-tip="Le code sera redemandé à la prochaine visite. Votre suivi reste enregistré."><svg class="ic"><use href="#i-lock"/></svg>Verrouiller</button>
+    <p>Le calendrier des élections CSE 2027.<br>Démo privée.</p>
+    <div class="field">
+      <input id="pw" type="password" required placeholder="Code d'accès" aria-label="Code d'accès" spellcheck="false" autocomplete="current-password">
+      <button class="go" type="submit" id="lockBtn" aria-label="Ouvrir"><svg class="ic"><use href="#i-arrow"/></svg></button>
     </div>
-  </aside>
-  <div class="main" id="main" tabindex="-1"></div>
+    <p id="lockErr" class="lock-err" role="alert">Code incorrect. Vérifiez les tirets.</p>
+    <p class="lock-foot">Demandé une seule fois sur cet appareil.</p>
+  </form>
 </div>
 
-<dialog id="panel" class="panel" aria-labelledby="pTitle"><div class="panel-in" id="panelBody"></div></dialog>
-<div id="tip" class="tip" role="tooltip" hidden></div>
-<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<div id="app" class="app" hidden>
+  <header class="top">
+    <a class="brand" href="#/accueil" aria-label="Accueil"><svg aria-hidden="true"><use href="#logo"/></svg><span>Mandat</span></a>
+    <nav class="tabs" id="tabs" aria-label="Navigation">
+      <span class="tab-ind" id="tabInd" aria-hidden="true"></span>
+      <a href="#/accueil" data-view="accueil"><svg class="ic"><use href="#i-home"/></svg><span>Accueil</span></a>
+      <a href="#/prospects" data-view="prospects"><svg class="ic"><use href="#i-list"/></svg><span>Prospects</span></a>
+      <a href="#/calendrier" data-view="calendrier"><svg class="ic"><use href="#i-cal"/></svg><span>Calendrier</span></a>
+      <a href="#/assistant" data-view="assistant"><svg class="ic"><use href="#i-scale"/></svg><span>Assistant</span></a>
+      <a href="#/methode" data-view="methode"><svg class="ic"><use href="#i-book"/></svg><span>Méthode</span></a>
+    </nav>
+    <div class="top-r">
+      <button class="kbtn" id="openCmd" type="button" data-tip="Chercher un établissement ou une action"><svg class="ic"><use href="#i-search"/></svg><span>Rechercher</span><kbd>Ctrl K</kbd></button>
+      <button class="iconbtn" id="logout" type="button" aria-label="Verrouiller" data-tip="Verrouiller cet appareil : le code sera redemandé. Votre suivi reste enregistré."><svg class="ic"><use href="#i-lock"/></svg></button>
+    </div>
+  </header>
+  <main id="main" class="main" tabindex="-1"></main>
+</div>
+
+<div id="session" class="session" hidden role="dialog" aria-modal="true" aria-label="Session d'appels"></div>
+
+<dialog id="sheet" class="sheet" aria-labelledby="sTitle"><div class="sheet-in" id="sheetBody"></div></dialog>
+
+<dialog id="cmd" class="cmd" aria-label="Recherche">
+  <div class="cmd-in">
+    <label class="cmd-field"><svg class="ic"><use href="#i-search"/></svg><input id="cmdIn" placeholder="Établissement, ville, action…" autocomplete="off" spellcheck="false" aria-label="Rechercher"><kbd>Échap</kbd></label>
+    <div class="cmd-list" id="cmdList" role="listbox"></div>
+  </div>
+</dialog>
+
+<div id="tip" class="tip" role="tooltip"></div>
+<div id="toasts" class="toasts" aria-live="polite"></div>
 
 <script src="data.js"></script>
 <script src="vendor/xlsx.mini.min.js" defer></script>
