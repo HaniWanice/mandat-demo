@@ -212,7 +212,7 @@ function viewDashboard() {
 function filtered(ignoreFilters = false) {
   const q = norm(state.q.trim());
   const rows = ROWS.filter((r) => ignoreFilters || (
-    (!q || norm(`${r.entreprise} ${r.ville} ${r.cp} ${r.secteur} ${r.dirigeant} ${r.elus.map((e) => e.nom).join(" ")}`).includes(q))
+    (!q || norm(`${r.entreprise} ${r.ville} ${r.cp} ${r.secteur} ${r.dirigeant}`).includes(q))
     && (!state.mois || r.mois === state.mois)
     && (!state.secteur || r.secteur === state.secteur)
     && (!state.taille || (state.taille === "50" ? big(r) : !big(r)))
@@ -233,7 +233,7 @@ function viewProspects() {
       <p>${ROWS.length} établissements qui revotent au 1er semestre 2027, avec le contact de l'entreprise. Cliquez une ligne pour ouvrir sa fiche.</p>
     </div></header>
     <div class="toolbar">
-      <label class="search" data-tip="Nom, ville, code postal, secteur ou nom d'un élu. Raccourci : touche /"><svg class="ic"><use href="#i-search"/></svg>
+      <label class="search" data-tip="Nom, ville, code postal, secteur ou dirigeant. Raccourci : touche /"><svg class="ic"><use href="#i-search"/></svg>
         <input id="q" type="search" placeholder="Rechercher" value="${esc(state.q)}" aria-label="Rechercher"></label>
       <select id="fMois" aria-label="Mois" data-tip="Ne garder qu'un mois d'élection.">${opt("", "Tous les mois", state.mois)}${months.map((m) => opt(m, capital(monthLabel(m)), state.mois)).join("")}</select>
       <select id="fSecteur" aria-label="Secteur" data-tip="Secteur d'activité, déduit du code NAF officiel.">${opt("", "Tous les secteurs", state.secteur)}${sectors.map((s) => opt(s, s, state.secteur)).join("")}</select>
@@ -257,7 +257,6 @@ function viewProspects() {
         <th scope="col"><button class="sort" data-sort="mois" data-tip="Mois estimé de la prochaine élection.">Élection</button></th>
         <th scope="col"><button class="sort" data-sort="entreprise">Établissement</button></th>
         <th scope="col" class="num col-size"><button class="sort" data-sort="inscrits" data-tip="Salariés inscrits au dernier vote : plus il y en a, plus le CSE compte d'élus à former.">Électeurs</button></th>
-        <th scope="col" class="col-people"><span class="th" data-tip="${D.txt.noms_tip}">Élus CSE</span></th>
         <th scope="col"><span class="th" data-tip="Standard de l'entreprise : demandez le ou la secrétaire du CSE.">Standard</span></th>
         <th scope="col"><span class="th" data-tip="Votre suivi, enregistré sur cet appareil.">Suivi</span></th>
       </tr></thead>
@@ -277,7 +276,6 @@ function renderRows() {
       <td><div class="when ${isSoon(r.mois) ? "soon" : ""}" data-tip="Élection estimée en ${monthLabel(r.mois)}.${isSoon(r.mois) ? " Dans la fenêtre d'appel." : ""}"><b>${capital(monthLabel(r.mois))}</b><span>${untilLabel(r.mois)}</span></div></td>
       <td><div class="co"><b>${esc(r.entreprise)}</b><span>${esc(cityCase(r.ville))} · ${esc(r.secteur)} · ${esc(r.effectif)} sal.</span></div></td>
       <td class="num col-size">${r.inscrits}</td>
-      <td class="col-people"><span class="people" data-tip="Exemples fictifs : ${esc(r.elus.map((e) => `${e.nom}, ${e.role}`).join(" · "))}">${r.elus.map((e) => `<span class="avatar">${initials(e.nom)}</span>`).join("")}<span>${esc(r.elus[0].nom)}</span><span class="ex">exemple</span></span></td>
       <td>${r.tel ? `<span class="tel"><a class="mono" href="${telHref(r.tel)}" data-tip="Appeler le standard.">${fmtTel(r.tel)}</a>${r.tel_local ? "" : `<span class="hq" data-tip="Numéro hors de la région : probablement le standard du siège.">siège</span>`}<button class="mini" data-copy="${r.tel}" aria-label="Copier le numéro" data-tip="Copier"><svg class="ic"><use href="#i-copy"/></svg></button></span>` : `<span class="none" data-tip="Pas de standard trouvé : voir email ou site dans la fiche.">Pas de standard</span>`}</td>
       <td><select class="status" data-s="${s}" data-siret="${r.siret}" aria-label="Suivi pour ${esc(r.entreprise)}">${STATUSES.map(([v, l]) => `<option value="${v}" ${v === s ? "selected" : ""}>${l}</option>`).join("")}</select></td>
     </tr>`;
@@ -302,9 +300,7 @@ function openPanel(siret) {
     <div class="p-head"><div><h2 id="pTitle">${esc(r.entreprise)}</h2><p>${esc(cityCase(r.ville))} · ${esc(r.secteur)}</p></div>
       <button class="btn icon ghost" data-close aria-label="Fermer" data-tip="Fermer (Échap)"><svg class="ic"><use href="#i-x"/></svg></button></div>
     <div class="p-when ${soon ? "" : "later"}"><b>Élection estimée en ${monthLabel(r.mois)}</b><span>${capital(untilLabel(r.mois))} · ${soon ? "dans la fenêtre d'appel, le vote se prépare maintenant" : "à rappeler avant l'organisation du vote"}</span></div>
-    <section class="p-sec"><h3>Élus du CSE <span class="ex">exemples fictifs</span></h3>
-      ${r.elus.map((e) => `<div class="person"><span class="avatar">${initials(e.nom)}</span><div><b>${esc(e.nom)}</b><span>${esc(e.role)}</span></div></div>`).join("")}
-      <p class="muted" style="font-size:var(--t-xs);margin:6px 0 0">${D.txt.noms}</p></section>
+    <section class="p-sec"><h3>Qui demander</h3><p class="muted" style="font-size:var(--t-sm);margin:0">Au standard, demandez le ou la secrétaire du CSE.</p></section>
     <section class="p-sec"><h3>Contact de l'entreprise</h3>
       ${r.tel ? `<div class="p-row"><svg class="ic"><use href="#i-phone"/></svg><span class="v"><a class="mono" href="${telHref(r.tel)}">${fmtTel(r.tel)}</a> <span class="muted">${r.tel_local ? "standard" : "standard, probablement le siège"}</span></span><button class="mini" data-copy="${r.tel}" aria-label="Copier le numéro"><svg class="ic"><use href="#i-copy"/></svg></button></div>` : ""}
       ${r.email ? `<div class="p-row"><svg class="ic"><use href="#i-mail"/></svg><span class="v"><a href="mailto:${esc(r.email)}?subject=${subject}" data-tip="Ouvre votre messagerie avec un objet déjà rempli.">${esc(r.email)}</a></span><button class="mini" data-copy="${esc(r.email)}" aria-label="Copier l'email"><svg class="ic"><use href="#i-copy"/></svg></button></div>` : ""}
@@ -315,11 +311,11 @@ function openPanel(siret) {
       <div class="seg">${STATUSES.map(([v, l]) => `<button type="button" data-st="${v}" data-siret="${r.siret}" aria-pressed="${v === s}" data-tip="${STATUS_TIP[v]}">${l}</button>`).join("")}</div></section>
     <section class="p-sec"><h3><label for="note">Notes</label></h3>
       <textarea id="note" data-siret="${r.siret}" placeholder="Ex. secrétaire du CSE absente, rappeler mardi matin">${esc(noteOf(r))}</textarea></section>
-    <section class="p-sec"><h3>Formations à proposer <span class="ex">maquette</span></h3>
+    <section class="p-sec"><h3>Formations à proposer</h3>
       <div class="trainings">
-        <div class="training"><b>SSCT · santé, sécurité, conditions de travail</b><span>Tous les élus · 5 jours au premier mandat · payée par l'employeur</span><button class="btn" data-mock>Préparer un devis</button></div>
-        ${big(r) ? `<div class="training"><b>Formation économique</b><span>Titulaires, dès 50 salariés · budget du CSE</span><button class="btn" data-mock>Préparer un devis</button></div>` : ""}
-        <div class="training"><b>Référent harcèlement</b><span>L'élu désigné par le CSE</span><button class="btn" data-mock>Préparer un devis</button></div>
+        <div class="training"><b>SSCT · santé, sécurité, conditions de travail</b><span>Tous les élus · 5 jours au premier mandat · payée par l'employeur</span></div>
+        ${big(r) ? `<div class="training"><b>Formation économique</b><span>Titulaires, dès 50 salariés · budget du CSE</span></div>` : ""}
+        <div class="training"><b>Référent harcèlement</b><span>L'élu désigné par le CSE</span></div>
       </div></section>
     <section class="p-sec"><h3>Fiche</h3><dl class="facts">
       <dt>Électeurs inscrits</dt><dd>${r.inscrits}</dd>
@@ -336,7 +332,7 @@ function openPanel(siret) {
   if (!p.open) p.showModal();
 }
 
-/* ---------- Formations (mock) ---------- */
+/* ---------- Formations  ---------- */
 
 function viewFormations() {
   const bigRows = ROWS.filter(big);
@@ -344,7 +340,7 @@ function viewFormations() {
   $("#main").innerHTML = `
     <header class="view-head"><div><h1>Formations</h1>
       <p>Chaque élection crée des élus qui doivent être formés. Cette vue relie les prospects aux formations du catalogue.</p></div></header>
-    <div class="banner"><svg class="ic"><use href="#i-grad"/></svg><p><b>Maquette.</b> Les chiffres viennent des ${ROWS.length} prospects de la démo ; le catalogue, les prix et les devis seraient ceux de Qualyz.</p></div>
+    <div class="banner"><svg class="ic"><use href="#i-grad"/></svg><p>Les chiffres viennent des ${ROWS.length} prospects de la démo. Les prix et les devis de Qualyz pourraient se brancher ici.</p></div>
     <div class="catalog">
       <section class="surface course"><h2>SSCT</h2><p>Santé, sécurité et conditions de travail. Obligatoire pour tous les élus, 5 jours au premier mandat, payée par l'employeur.</p><div class="big">${ROWS.length} <small>établissements concernés</small></div></section>
       <section class="surface course"><h2>Formation économique</h2><p>Lire les comptes et la stratégie de l'entreprise. Pour les titulaires dès 50 salariés, sur le budget du CSE.</p><div class="big">${bigRows.length} <small>établissements de 50 salariés et plus</small></div></section>
@@ -354,7 +350,7 @@ function viewFormations() {
       ${strip(byMonth, { compact: true })}</section>`;
 }
 
-/* ---------- Assistant (rule-based mock over the data) ---------- */
+/* ---------- Assistant (rule-based, over the real data) ---------- */
 
 const SUGGESTIONS = ["Qui vote en mars ?", "Les plus gros CSE", "Établissements à Lyon", "Santé et médico-social", "Lesquels ont un email ?", "Combien à appeler maintenant ?"];
 
@@ -382,7 +378,7 @@ function answer(qRaw) {
 function viewAssistant() {
   $("#main").innerHTML = `
     <header class="view-head"><div><h1>Assistant</h1><p>Posez une question en français sur vos prospects.</p></div></header>
-    <div class="banner"><svg class="ic"><use href="#i-chat"/></svg><p><b>Maquette.</b> Les réponses sont calculées sur les données de la démo, sans modèle d'IA. La version réelle répondrait aussi aux questions des élus (droit du CSE, budgets, consultations), avec les sources.</p></div>
+    <div class="banner"><svg class="ic"><use href="#i-chat"/></svg><p><b>Sans IA pour l'instant.</b> Les réponses sont calculées directement sur les données de la démo. La version réelle répondrait aussi aux questions des élus (droit du CSE, budgets, consultations), avec les sources.</p></div>
     <section class="surface chatbox"><div class="msgs" id="msgs" aria-live="polite">
       <div class="msg bot">Bonjour. Je connais les ${ROWS.length} prospects de la démo. Essayez une des questions ci-dessous.</div></div>
       <div><div class="suggest">${SUGGESTIONS.map((s) => `<button type="button" data-ask="${esc(s)}">${esc(s)}</button>`).join("")}</div>
@@ -421,7 +417,6 @@ function exportRows() {
     "Élection estimée": monthLabel(r.mois), "Mois (AAAA-MM)": r.mois, "Entreprise": r.entreprise, "Ville": cityCase(r.ville),
     "Code postal": r.cp, "Adresse": r.adresse, "Secteur": r.secteur, "NAF": r.naf, "Effectif": r.effectif, "Électeurs inscrits": r.inscrits,
     "Standard": fmtTel(r.tel), "Email": r.email, "Site": r.site, "Dirigeant publié": r.dirigeant,
-    "Élus (exemples fictifs)": r.elus.map((e) => `${e.nom} (${e.role})`).join(" ; "),
     "SIRET": r.siret, "Suivi": STATUS_LABEL[statusOf(r)], "Notes": noteOf(r),
   }));
 }
@@ -511,7 +506,6 @@ document.addEventListener("click", (e) => {
   if (st) { save(st.dataset.siret, { s: st.dataset.st }); document.querySelectorAll("[data-st]").forEach((b) => b.setAttribute("aria-pressed", b === st)); if ($("#rows")) renderRows(); return; }
   const ic = t.closest("[data-ics]");
   if (ic) { const r = ROWS.find((x) => x.siret === ic.dataset.ics); return download(icsFor([r]), `rappel-${r.siret}.ics`, "text/calendar"); }
-  if (t.closest("[data-mock]")) return toast("Maquette : le devis serait généré depuis le catalogue Qualyz");
   if (t.closest("[data-close]")) return $("#panel").close();
   const ak = t.closest("[data-ask]");
   if (ak) return ask(ak.dataset.ask);
