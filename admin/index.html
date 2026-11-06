@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Visites des sites Hani Wanice. Page privée.">
+<title>Visites</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+  .adm { max-width: 1240px; margin: 0 auto; padding: 24px clamp(16px, 3vw, 32px) 64px; }
+  .adm-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin: 12px 0 20px; }
+  .adm-head h1 { font-size: var(--t-3xl); letter-spacing: -.045em; line-height: 1; }
+  .adm-head p { margin: 8px 0 0; color: var(--ink-2); }
+  .bar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 16px 0 12px; }
+  .vlist { display: grid; gap: 8px; list-style: none; margin: 0; padding: 0; }
+  .visit { display: grid; grid-template-columns: 120px minmax(0, 1.2fr) minmax(0, 1.4fr) 130px 90px minmax(0, 1fr); gap: 16px; align-items: center; padding: 14px 16px; border-radius: var(--r); background: var(--surface); box-shadow: var(--sh-1); font-size: var(--t-sm); }
+  .visit.mine { opacity: .55; }
+  .visit b { display: block; font-weight: 600; font-size: var(--t-md); }
+  .visit .sub { color: var(--ink-3); font-size: var(--t-xs); }
+  .visit .pages { color: var(--ink-2); font-size: var(--t-xs); }
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .note-adm { margin-top: 24px; padding: 14px 18px; border-radius: 16px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--hair); font-size: var(--t-sm); color: var(--ink-2); }
+  .note-adm code { font-family: var(--font-mono); color: var(--ink); }
+  .live { display: inline-flex; align-items: center; gap: 8px; font-size: var(--t-sm); color: var(--ink-2); }
+  @media (max-width: 900px) {
+    .visit { grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; }
+    .visit > :nth-child(n+3) { grid-column: 1 / -1; }
+  }
+</style>
+</head>
+<body>
+<div id="lock" class="lock">
+  <div class="mesh" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+  <form id="lockForm" class="lock-card" autocomplete="off">
+    <h1>Visites</h1>
+    <p>Qui a ouvert vos sites. Page privée.</p>
+    <div class="field">
+      <input id="pw" type="password" required placeholder="Mot de passe" aria-label="Mot de passe" autocomplete="current-password">
+      <button class="go" type="submit" id="lockBtn" aria-label="Ouvrir"><svg class="ic" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>
+    </div>
+    <p id="lockErr" class="lock-err" role="alert">Mot de passe incorrect.</p>
+  </form>
+</div>
+
+<main id="app" class="adm" hidden>
+  <header class="adm-head">
+    <div><h1>Visites</h1><p id="sub">Chargement…</p></div>
+    <span class="live" id="live">Connexion…</span>
+  </header>
+  <div class="stats" id="stats"></div>
+  <div class="bar">
+    <div class="seg" id="segSite" role="group" aria-label="Site"><span class="seg-ind"></span></div>
+    <label class="chip" style="cursor:pointer"><input type="checkbox" id="showMine" style="margin:0"> Montrer mes visites</label>
+    <span class="spacer"></span>
+    <button class="btn" id="refresh" type="button">Actualiser</button>
+  </div>
+  <ul class="vlist" id="list"></ul>
+  <p class="empty" id="empty" hidden><b>Aucune visite pour l'instant.</b>Les visites apparaissent ici en direct.</p>
+  <div class="note-adm" id="note"></div>
+</main>
+
+<script src="data.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

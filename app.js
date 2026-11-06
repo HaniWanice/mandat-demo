@@ -150,6 +150,7 @@ function burst(x, y) {
 /* ---------- Start, routing, shell ---------- */
 
 function start(data) {
+  window.hwTrack?.("unlock");
   D = data;
   ROWS = data.rows;
   BY_SIRET = Object.fromEntries(ROWS.map((r) => [r.siret, r]));
@@ -172,6 +173,7 @@ function route() {
     currentView = v;
   };
   if (currentView === v) return swap();
+  if (currentView) window.hwTrack?.("view", { n: TITLES[v] });
   currentView = v;
   curtain(first ? "Mandat" : TITLES[v], first ? "Élections CSE 2027" : "", swap, first);
 }
