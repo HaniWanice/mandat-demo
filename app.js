@@ -1,5 +1,7 @@
 "use strict";
 
+document.documentElement.classList.add("js");
+
 const KEY_STORE = "mandat.key";
 const TRACK_STORE = "mandat.suivi";
 const MONTHS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
@@ -106,7 +108,7 @@ function save(siret, patch) {
 function toast(msg) {
   const t = document.createElement("div");
   t.className = "toast";
-  t.innerHTML = `<i><svg class="ic"><use href="#i-check"/></svg></i>${esc(msg)}`;
+  t.innerHTML = `<i><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></i>${esc(msg)}`;
   $("#toasts").append(t);
   setTimeout(() => { t.classList.add("out"); setTimeout(() => t.remove(), 500); }, 2800);
 }
@@ -206,13 +208,13 @@ function curtain(title, sub, swap, intro) {
 function moveTabInd() {
   const a = $("#tabs a[aria-current]"), ind = $("#tabInd");
   if (!a) return;
-  ind.style.left = a.offsetLeft + "px";
+  ind.style.transform = `translateX(${a.offsetLeft - 4}px)`;
   ind.style.width = a.offsetWidth + "px";
 }
 
 function moveSegInd(seg) {
   const on = $("button[aria-pressed='true']", seg), ind = $(".seg-ind", seg);
-  if (on && ind) { ind.style.left = on.offsetLeft + "px"; ind.style.width = on.offsetWidth + "px"; }
+  if (on && ind) { ind.style.transform = `translateX(${on.offsetLeft - 3}px)`; ind.style.width = on.offsetWidth + "px"; }
 }
 
 function go(hash) {
@@ -262,7 +264,7 @@ function viewHome() {
         <div class="typer" style="--i:2" data-tip="Les prochains établissements à appeler, tirés de votre liste."><b>À appeler</b><span id="typed"></span></div>
         <p style="--i:3">Sur vos ${ROWS.length} établissements en ${esc(D.region)}. Le vote se prépare un à trois mois avant : c'est le moment d'appeler, avant les autres organismes.</p>
         <div class="acts" style="--i:4">
-          <button class="btn primary lg" type="button" data-session ${queue.length ? "" : "disabled"}><svg class="ic"><use href="#i-phone"/></svg>Lancer la session d'appels<kbd style="background:rgba(255,255,255,.14);color:#fff">${queue.length}</kbd></button>
+          <button class="btn primary lg" type="button" data-session ${queue.length ? "" : "disabled"}><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg>Lancer la session d'appels<kbd style="background:rgba(255,255,255,.14);color:#fff">${queue.length}</kbd></button>
           <a class="btn lg" href="#/prospects">Voir les prospects</a>
         </div>
       </div>
@@ -288,10 +290,10 @@ function viewHome() {
       <section class="tile span-7" style="--i:4">
         <h2>À appeler en premier</h2>
         <p class="sub">Les élections les plus proches, les plus gros CSE d'abord.</p>
-        <a class="btn ghost more" href="#/prospects">Tout voir<svg class="ic"><use href="#i-arrow"/></svg></a>
+        <a class="btn ghost more" href="#/prospects">Tout voir<svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
         <ul class="next">${first.map((r) => `<li><button type="button" data-open="${r.siret}">${av(r)}
-          <span class="who"><b>${esc(r.entreprise)}</b><span>${esc(cityCase(r.ville))} · ${r.inscrits} électeurs</span></span>
-          <span class="pill ${isSoon(r.mois) ? "hot" : "brand"}">${isSoon(r.mois) ? '<span class="dot"></span>' : ""}${SHORT[+r.mois.slice(5) - 1]} ${r.mois.slice(0, 4)}</span></button></li>`).join("")}</ul>
+          <span class="who"><b>${esc(r.entreprise)}</b><span>${esc(cityCase(r.ville))}, ${r.inscrits} électeurs</span></span>
+          <span class="pill ${isSoon(r.mois) ? "hot" : "brand"}">${isSoon(r.mois) ? "" : ""}${SHORT[+r.mois.slice(5) - 1]} ${r.mois.slice(0, 4)}</span></button></li>`).join("")}</ul>
       </section>
       <section class="tile span-5" style="--i:5">
         <h2>Où, au 1er semestre</h2>
@@ -300,7 +302,7 @@ function viewHome() {
       </section>
     </div></div>`;
   countUp();
-  typewriter($("#typed"), due.slice(0, 8).map((r) => `${r.entreprise} · ${cityCase(r.ville)} · vote en ${monthLabel(r.mois)}`));
+  typewriter($("#typed"), due.slice(0, 8).map((r) => `${r.entreprise}, ${cityCase(r.ville)}, vote en ${monthLabel(r.mois)}`));
 }
 
 // Types each phrase, holds it, erases it, then moves on; stops by itself once the view is gone.
@@ -344,8 +346,8 @@ function viewProspects() {
   $("#main").innerHTML = `<div class="view">
     <header class="page-head stag"><div style="--i:0"><h1>Prospects</h1><p>${ROWS.length} établissements en ${esc(D.region)} qui revotent au 1er semestre 2027, avec le contact de l'entreprise.</p></div>
       <div class="row-tools" style="--i:1">
-        <button class="btn" id="copyTels" type="button" data-tip="Copie les numéros affichés, un par ligne."><svg class="ic"><use href="#i-copy"/></svg>Copier les numéros</button>
-        <button class="btn primary" type="button" popovertarget="exportMenu" data-tip="Télécharge les lignes affichées, avec votre suivi et vos notes."><svg class="ic"><use href="#i-down"/></svg>Exporter</button>
+        <button class="btn" id="copyTels" type="button" data-tip="Copie les numéros affichés, un par ligne."><svg class="ic" aria-hidden="true"><use href="#i-copy"/></svg>Copier les numéros</button>
+        <button class="btn primary" type="button" popovertarget="exportMenu" data-tip="Télécharge les lignes affichées, avec votre suivi et vos notes."><svg class="ic" aria-hidden="true"><use href="#i-down"/></svg>Exporter</button>
         <div id="exportMenu" class="menu" popover role="menu">
           <button role="menuitem" data-exp="xlsx">Excel <span>.xlsx</span></button>
           <button role="menuitem" data-exp="csv">CSV pour CRM <span>.csv</span></button>
@@ -356,7 +358,7 @@ function viewProspects() {
       </div></header>
     <div class="bar-tools">
       <div class="row-tools">
-        <label class="search" data-tip="Nom, ville, code postal, secteur ou dirigeant. Raccourci : /"><svg class="ic"><use href="#i-search"/></svg><input id="q" type="search" placeholder="Rechercher un établissement" value="${esc(state.q)}" aria-label="Rechercher"></label>
+        <label class="search" data-tip="Nom, ville, code postal, secteur ou dirigeant. Raccourci : /"><svg class="ic" aria-hidden="true"><use href="#i-search"/></svg><input id="q" type="search" placeholder="Rechercher un établissement" value="${esc(state.q)}" aria-label="Rechercher"></label>
         <div class="filters">
         <div class="seg" id="segTaille" role="group" aria-label="Taille" data-tip="Dès 50 salariés, les titulaires ont aussi droit à la formation économique."><span class="seg-ind"></span>
           ${[["", "Toutes tailles"], ["50", "50 sal. et +"], ["moins", "Moins de 50"]].map(([v, l]) => `<button type="button" data-taille="${v}" aria-pressed="${state.taille === v}">${l}</button>`).join("")}</div>
@@ -385,11 +387,11 @@ function rowHTML(r) {
   const s = statusOf(r);
   return `<li class="prow ${s === "ecarte" ? "dim" : ""}" data-siret="${r.siret}" tabindex="0">
     ${av(r)}
-    <span class="who"><b>${esc(r.entreprise)}</b><span>${esc(cityCase(r.ville))} · ${esc(r.effectif)} salariés</span></span>
+    <span class="who"><b>${esc(r.entreprise)}</b><span>${esc(cityCase(r.ville))}, ${esc(r.effectif)} salariés</span></span>
     <span class="c-sec">${esc(r.secteur)}</span>
     <span class="c-el" data-tip="Salariés inscrits au dernier vote : plus il y en a, plus il y a d'élus à former."><b>${r.inscrits}</b>électeurs</span>
-    <span class="c-tel">${r.tel ? `<span class="tel"><a class="mono" href="${telHref(r.tel)}" data-tip="Appeler le standard. Demandez le ou la secrétaire du CSE.">${fmtTel(r.tel)}</a>${r.tel_local ? "" : `<span class="hq" data-tip="Numéro hors de la région : probablement le standard du siège.">siège</span>`}<button class="mini" data-copy="${r.tel}" aria-label="Copier le numéro" data-tip="Copier"><svg class="ic"><use href="#i-copy"/></svg></button></span>` : `<span class="none">Pas de standard trouvé</span>`}</span>
-    <span class="c-st"><span class="pill ${isSoon(r.mois) ? "hot" : "brand"}" style="margin-right:6px" data-tip="Élection estimée en ${monthLabel(r.mois)}, ${untilLabel(r.mois)}.">${isSoon(r.mois) ? '<span class="dot"></span>' : ""}${SHORT[+r.mois.slice(5) - 1]}</span><select class="stsel" data-s="${s}" data-siret="${r.siret}" aria-label="Suivi pour ${esc(r.entreprise)}">${STATUSES.map(([v, l]) => `<option value="${v}" ${v === s ? "selected" : ""}>${l}</option>`).join("")}</select></span>
+    <span class="c-tel">${r.tel ? `<span class="tel"><a class="mono" href="${telHref(r.tel)}" data-tip="Appeler le standard. Demandez le ou la secrétaire du CSE.">${fmtTel(r.tel)}</a>${r.tel_local ? "" : `<span class="hq" data-tip="Numéro hors de la région : probablement le standard du siège.">siège</span>`}<button class="mini" data-copy="${r.tel}" aria-label="Copier le numéro" data-tip="Copier"><svg class="ic" aria-hidden="true"><use href="#i-copy"/></svg></button></span>` : `<span class="none">Pas de standard trouvé</span>`}</span>
+    <span class="c-st"><span class="pill ${isSoon(r.mois) ? "hot" : "brand"}" style="margin-right:6px" data-tip="Élection estimée en ${monthLabel(r.mois)}, ${untilLabel(r.mois)}.">${isSoon(r.mois) ? "" : ""}${SHORT[+r.mois.slice(5) - 1]}</span><select class="stsel" data-s="${s}" data-siret="${r.siret}" aria-label="Suivi pour ${esc(r.entreprise)}">${STATUSES.map(([v, l]) => `<option value="${v}" ${v === s ? "selected" : ""}>${l}</option>`).join("")}</select></span>
   </li>`;
 }
 
@@ -401,7 +403,7 @@ function renderRows(first = false) {
   const rows = filtered();
   list.innerHTML = rows.map(rowHTML).join("");
   $("#empty").hidden = rows.length > 0;
-  $("#countLine").innerHTML = `<b>${rows.length}</b> ${plural(rows.length, "établissement")} · <b>${rows.filter((r) => r.tel).length}</b> avec standard · <b>${rows.filter((r) => isSoon(r.mois)).length}</b> à appeler maintenant`;
+  $("#countLine").innerHTML = `<b>${rows.length}</b> ${plural(rows.length, "établissement")}, <b>${rows.filter((r) => r.tel).length}</b> avec standard, <b>${rows.filter((r) => isSoon(r.mois)).length}</b> à appeler maintenant`;
   $$("#chipsMois .chip").forEach((c) => c.setAttribute("aria-pressed", c.dataset.mois === state.mois));
   if (reduced) return;
   $$(".prow", list).forEach((el, i) => {
@@ -424,31 +426,31 @@ function openSheet(siret) {
   const line = `${r.entreprise}, ${cityCase(r.ville)}, élection CSE estimée ${monthLabel(r.mois)}${r.tel ? ", standard " + fmtTel(r.tel) : ""}`;
   const subject = encodeURIComponent("Élections du CSE et formation des élus");
   $("#sheetBody").innerHTML = `
-    <div class="s-head" style="--i:0">${av(r)}<div><h2 id="sTitle">${esc(r.entreprise)}</h2><p>${esc(cityCase(r.ville))} · ${esc(r.secteur)}</p></div>
-      <button class="iconbtn" data-close aria-label="Fermer" data-tip="Fermer (Échap)"><svg class="ic"><use href="#i-x"/></svg></button></div>
-    <div class="s-when ${soon ? "" : "later"}" style="--i:1"><b>Élection estimée en ${monthLabel(r.mois)}</b><span>${capital(untilLabel(r.mois))} · ${soon ? "le vote se prépare maintenant, appelez cette semaine" : "à appeler avant l'organisation du vote"}</span></div>
-    ${r.tel ? `<a class="bigtel" style="--i:2" href="${telHref(r.tel)}"><span><small>Standard${r.tel_local ? "" : ", probablement le siège"} · demandez le ou la secrétaire du CSE</small><span class="mono">${fmtTel(r.tel)}</span></span><svg class="ic"><use href="#i-phone"/></svg></a>` : ""}
+    <div class="s-head" style="--i:0">${av(r)}<div><h2 id="sTitle">${esc(r.entreprise)}</h2><p>${esc(cityCase(r.ville))}, ${esc(r.secteur)}</p></div>
+      <button class="iconbtn" data-close aria-label="Fermer" data-tip="Fermer (Échap)"><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+    <div class="s-when ${soon ? "" : "later"}" style="--i:1"><b>Élection estimée en ${monthLabel(r.mois)}</b><span>${capital(untilLabel(r.mois))}, ${soon ? "le vote se prépare maintenant, appelez cette semaine" : "à appeler avant l'organisation du vote"}</span></div>
+    ${r.tel ? `<a class="bigtel" style="--i:2" href="${telHref(r.tel)}"><span><small>Standard${r.tel_local ? "" : ", probablement le siège"}, demandez le ou la secrétaire du CSE</small><span class="mono">${fmtTel(r.tel)}</span></span><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg></a>` : ""}
     <section class="s-sec" style="--i:3"><h3>Contact de l'entreprise</h3>
-      ${r.tel ? `<div class="s-row"><svg class="ic"><use href="#i-phone"/></svg><span class="v mono">${fmtTel(r.tel)}</span><button class="mini" data-copy="${r.tel}" aria-label="Copier le numéro" data-tip="Copier"><svg class="ic"><use href="#i-copy"/></svg></button></div>` : ""}
-      ${r.email ? `<div class="s-row"><svg class="ic"><use href="#i-mail"/></svg><span class="v"><a href="mailto:${esc(r.email)}?subject=${subject}" data-tip="Ouvre votre messagerie avec un objet déjà rempli.">${esc(r.email)}</a></span><button class="mini" data-copy="${esc(r.email)}" aria-label="Copier l'email" data-tip="Copier"><svg class="ic"><use href="#i-copy"/></svg></button></div>` : ""}
-      ${r.site ? `<div class="s-row"><svg class="ic"><use href="#i-globe"/></svg><span class="v"><a href="${esc(siteUrl(r.site))}" target="_blank" rel="noopener">${esc(r.site)}</a></span></div>` : ""}
-      ${r.adresse ? `<div class="s-row"><svg class="ic"><use href="#i-pin"/></svg><span class="v"><a href="https://www.google.com/maps/search/${encodeURIComponent(r.adresse)}" target="_blank" rel="noopener">${esc(r.adresse)}</a></span></div>` : ""}
+      ${r.tel ? `<div class="s-row"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg><span class="v mono">${fmtTel(r.tel)}</span><button class="mini" data-copy="${r.tel}" aria-label="Copier le numéro" data-tip="Copier"><svg class="ic" aria-hidden="true"><use href="#i-copy"/></svg></button></div>` : ""}
+      ${r.email ? `<div class="s-row"><svg class="ic" aria-hidden="true"><use href="#i-mail"/></svg><span class="v"><a href="mailto:${esc(r.email)}?subject=${subject}" data-tip="Ouvre votre messagerie avec un objet déjà rempli.">${esc(r.email)}</a></span><button class="mini" data-copy="${esc(r.email)}" aria-label="Copier l'email" data-tip="Copier"><svg class="ic" aria-hidden="true"><use href="#i-copy"/></svg></button></div>` : ""}
+      ${r.site ? `<div class="s-row"><svg class="ic" aria-hidden="true"><use href="#i-globe"/></svg><span class="v"><a href="${esc(siteUrl(r.site))}" target="_blank" rel="noopener">${esc(r.site)}</a></span></div>` : ""}
+      ${r.adresse ? `<div class="s-row"><svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg><span class="v"><a href="https://www.google.com/maps/search/${encodeURIComponent(r.adresse)}" target="_blank" rel="noopener">${esc(r.adresse)}</a></span></div>` : ""}
     </section>
     <section class="s-sec" style="--i:4"><h3>Mon suivi</h3><div class="status-seg">${STATUSES.map(([v, l]) => `<button type="button" data-st="${v}" data-siret="${r.siret}" aria-pressed="${v === s}">${l}</button>`).join("")}</div></section>
     <section class="s-sec" style="--i:5"><h3><label for="note">Notes</label></h3><textarea id="note" data-siret="${r.siret}" placeholder="Ex. secrétaire du CSE absente, rappeler mardi matin">${esc(noteOf(r))}</textarea></section>
     <section class="s-sec" style="--i:6"><h3>Formations à proposer aux nouveaux élus</h3><div class="trainings">
-      <div class="training"><b>Santé, sécurité et conditions de travail</b><span>Tous les élus · 5 jours minimum au premier mandat, 3 jours au renouvellement · payée par l'employeur</span><a href="${CT}l2315-18" target="_blank" rel="noopener">Article L2315-18</a></div>
-      ${big(r) ? `<div class="training"><b>Formation économique</b><span>Titulaires élus pour la première fois, dès 50 salariés · 5 jours maximum · financée par le CSE</span><a href="${CT}l2315-63" target="_blank" rel="noopener">Article L2315-63</a></div>` : ""}
+      <div class="training"><b>Santé, sécurité et conditions de travail</b><span>Tous les élus, 5 jours minimum au premier mandat, 3 jours au renouvellement, payée par l'employeur</span><a href="${CT}l2315-18" target="_blank" rel="noopener">Article L2315-18</a></div>
+      ${big(r) ? `<div class="training"><b>Formation économique</b><span>Titulaires élus pour la première fois, dès 50 salariés, 5 jours maximum, financée par le CSE</span><a href="${CT}l2315-63" target="_blank" rel="noopener">Article L2315-63</a></div>` : ""}
       <div class="training"><b>Référent harcèlement</b><span>Désigné par le CSE parmi ses membres, pour la durée du mandat</span><a href="${CT}l2314-1" target="_blank" rel="noopener">Article L2314-1</a></div>
     </div></section>
     <section class="s-sec" style="--i:7"><h3>Fiche</h3><dl class="facts">
       <dt>Électeurs inscrits</dt><dd>${r.inscrits}</dd><dt>Effectif</dt><dd>${esc(r.effectif)} salariés</dd>
-      ${r.dirigeant ? `<dt data-tip="Dirigeant déclaré au registre officiel (donnée publique).">Dirigeant publié</dt><dd>${esc(r.dirigeant)}</dd>` : ""}
+      ${r.dirigeant ? `<dt data-tip="Dirigeant déclaré au registre officiel (donnée publique).">Dirigeant publié</dt><dd>${r.dirigeant.split("; ").map((d) => esc(d.replace(/ \(Autre\)/, ""))).join("<br>")}</dd>` : ""}
       <dt>Code NAF</dt><dd>${esc(r.naf)}</dd><dt>SIRET</dt><dd class="mono">${r.siret.replace(/(\d{3})(\d{3})(\d{3})(\d{5})/, "$1 $2 $3 $4")}</dd></dl></section>
     <div class="s-actions" style="--i:8">
-      <button class="btn" data-copy="${esc(line)}"><svg class="ic"><use href="#i-copy"/></svg>Copier la fiche</button>
-      <button class="btn" data-ics="${r.siret}" data-tip="Rappel trois mois avant l'élection."><svg class="ic"><use href="#i-cal"/></svg>Rappel agenda</button>
-      <a class="btn" href="https://annuaire-entreprises.data.gouv.fr/etablissement/${r.siret}" target="_blank" rel="noopener"><svg class="ic"><use href="#i-ext"/></svg>Fiche officielle</a>
+      <button class="btn" data-copy="${esc(line)}"><svg class="ic" aria-hidden="true"><use href="#i-copy"/></svg>Copier la fiche</button>
+      <button class="btn" data-ics="${r.siret}" data-tip="Rappel trois mois avant l'élection."><svg class="ic" aria-hidden="true"><use href="#i-cal"/></svg>Rappel agenda</button>
+      <a class="btn" href="https://annuaire-entreprises.data.gouv.fr/etablissement/${r.siret}" target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="#i-ext"/></svg>Fiche officielle</a>
     </div>`;
   const sh = $("#sheet");
   if (!sh.open) sh.showModal();
@@ -465,11 +467,11 @@ const SESS = { queue: [], i: 0, done: { appele: 0, rappeler: 0, ecarte: 0 } };
 
 function cardHTML(r, pos) {
   return `<article class="card" data-pos="${pos}" data-siret="${r.siret}" aria-hidden="${pos > 0}">
-    <div class="card-top"><span class="pill ${isSoon(r.mois) ? "hot" : "brand"}">${isSoon(r.mois) ? '<span class="dot"></span>' : ""}Élection ${monthLabel(r.mois)} · ${untilLabel(r.mois)}</span>${av(r)}</div>
-    <div><h3>${esc(r.entreprise)}</h3><p class="meta">${esc(cityCase(r.ville))} · ${esc(r.secteur)} · ${r.inscrits} électeurs · ${esc(r.effectif)} salariés</p></div>
-    <a class="bigtel" href="${telHref(r.tel)}" ${pos ? 'tabindex="-1"' : ""}><span><small>Standard${r.tel_local ? "" : ", probablement le siège"}</small><span class="mono">${fmtTel(r.tel)}</span></span><svg class="ic"><use href="#i-phone"/></svg></a>
+    <div class="card-top"><span class="pill ${isSoon(r.mois) ? "hot" : "brand"}">${isSoon(r.mois) ? "" : ""}Élection ${monthLabel(r.mois)}, ${untilLabel(r.mois)}</span>${av(r)}</div>
+    <div><h3>${esc(r.entreprise)}</h3><p class="meta">${esc(cityCase(r.ville))}, ${esc(r.secteur)}, ${r.inscrits} électeurs, ${esc(r.effectif)} salariés</p></div>
+    <a class="bigtel" href="${telHref(r.tel)}" ${pos ? 'tabindex="-1"' : ""}><span><small>Standard${r.tel_local ? "" : ", probablement le siège"}</small><span class="mono">${fmtTel(r.tel)}</span></span><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg></a>
     <p class="hint">Demandez le ou la secrétaire du CSE. ${big(r) ? "Dès 50 salariés : SSCT et formation économique pour les nouveaux titulaires." : "Formation SSCT pour tous les nouveaux élus."}</p>
-    <div class="card-links">${r.email ? `<a class="btn ghost" href="mailto:${esc(r.email)}" ${pos ? 'tabindex="-1"' : ""}><svg class="ic"><use href="#i-mail"/></svg>Email</a>` : ""}${r.site ? `<a class="btn ghost" href="${esc(siteUrl(r.site))}" target="_blank" rel="noopener" ${pos ? 'tabindex="-1"' : ""}><svg class="ic"><use href="#i-globe"/></svg>Site</a>` : ""}<button class="btn ghost" type="button" data-open="${r.siret}" ${pos ? 'tabindex="-1"' : ""}>Fiche complète</button></div>
+    <div class="card-links">${r.email ? `<a class="btn ghost" href="mailto:${esc(r.email)}" ${pos ? 'tabindex="-1"' : ""}><svg class="ic" aria-hidden="true"><use href="#i-mail"/></svg>Email</a>` : ""}${r.site ? `<a class="btn ghost" href="${esc(siteUrl(r.site))}" target="_blank" rel="noopener" ${pos ? 'tabindex="-1"' : ""}><svg class="ic" aria-hidden="true"><use href="#i-globe"/></svg>Site</a>` : ""}<button class="btn ghost" type="button" data-open="${r.siret}" ${pos ? 'tabindex="-1"' : ""}>Fiche complète</button></div>
   </article>`;
 }
 
@@ -480,13 +482,13 @@ function openSession() {
   if (!SESS.queue.length) return toast("Tout est traité, rien à appeler");
   const el = $("#session");
   el.innerHTML = `<div class="mesh" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-    <header class="sess-top"><div class="ring" id="ring"><span id="ringN">0/${SESS.queue.length}</span></div><div><h2>Session d'appels</h2><p>Les élections les plus proches d'abord. Raccourcis : ← pas intéressé · ↑ à rappeler · → appelé</p></div>
-      <button class="iconbtn" data-endsession aria-label="Terminer la session" data-tip="Terminer (Échap)"><svg class="ic"><use href="#i-x"/></svg></button></header>
+    <header class="sess-top"><div class="ring" id="ring"><span id="ringN">0/${SESS.queue.length}</span></div><div><h2>Session d'appels</h2><p>Les élections les plus proches d'abord. Raccourcis : ← pas intéressé, ↑ à rappeler, → appelé</p></div>
+      <button class="iconbtn" data-endsession aria-label="Terminer la session" data-tip="Terminer (Échap)"><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg></button></header>
     <div class="stack" id="stack"></div>
     <div class="sess-acts" id="sessActs">
-      <button class="act no" type="button" data-verdict="ecarte"><i><svg class="ic"><use href="#i-x"/></svg></i>Pas intéressé<kbd>←</kbd></button>
-      <button class="act later" type="button" data-verdict="rappeler"><i><svg class="ic"><use href="#i-clock"/></svg></i>À rappeler<kbd>↑</kbd></button>
-      <button class="act ok" type="button" data-verdict="appele"><i><svg class="ic"><use href="#i-check"/></svg></i>Appelé<kbd>→</kbd></button>
+      <button class="act no" type="button" data-verdict="ecarte"><i><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg></i>Pas intéressé<kbd>←</kbd></button>
+      <button class="act later" type="button" data-verdict="rappeler"><i><svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg></i>À rappeler<kbd>↑</kbd></button>
+      <button class="act ok" type="button" data-verdict="appele"><i><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></i>Appelé<kbd>→</kbd></button>
     </div>`;
   el.hidden = false;
   el.classList.remove("leave");
@@ -502,8 +504,8 @@ function renderStack(first) {
   $("#ringN").textContent = `${SESS.i}/${total}`;
   if (!left.length) {
     $("#sessActs").hidden = true;
-    stack.innerHTML = `<div class="done"><div class="big"><svg class="ic"><use href="#i-check"/></svg></div><h3>Session terminée</h3>
-      <p>${SESS.done.appele} ${plural(SESS.done.appele, "appelé")} · ${SESS.done.rappeler} à rappeler · ${SESS.done.ecarte} ${plural(SESS.done.ecarte, "écarté")}. Tout est enregistré dans votre suivi.</p>
+    stack.innerHTML = `<div class="done"><div class="big"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></div><h3>Session terminée</h3>
+      <p>${SESS.done.appele} ${plural(SESS.done.appele, "appelé")}, ${SESS.done.rappeler} à rappeler, ${SESS.done.ecarte} ${plural(SESS.done.ecarte, "écarté")}. Tout est enregistré dans votre suivi.</p>
       <button class="btn primary lg" data-endsession type="button">Retour à l'accueil</button></div>`;
     const b = stack.getBoundingClientRect();
     burst(b.left + b.width / 2, b.top + b.height / 2 - 40);
@@ -590,10 +592,10 @@ const DATA_QS = ["Qui vote en mars ?", "Les plus gros CSE", "Établissements à 
 
 function answer(qRaw) {
   const q = norm(qRaw);
-  const list = (rows, n = 5) => `<ul>${rows.slice(0, n).map((r) => `<li><a data-open="${r.siret}">${esc(r.entreprise)}</a> · ${esc(cityCase(r.ville))} · ${monthLabel(r.mois)} · ${r.inscrits} électeurs</li>`).join("")}</ul>${rows.length > n ? `<p class="muted" style="margin-top:6px">… et ${rows.length - n} autres dans Prospects.</p>` : ""}`;
+  const list = (rows, n = 5) => `<ul>${rows.slice(0, n).map((r) => `<li><a data-open="${r.siret}">${esc(r.entreprise)}</a>, ${esc(cityCase(r.ville))}, ${monthLabel(r.mois)}, ${r.inscrits} électeurs</li>`).join("")}</ul>${rows.length > n ? `<p class="muted" style="margin-top:6px">… et ${rows.length - n} autres dans Prospects.</p>` : ""}`;
   const law = LAW.find((l) => l.k.test(q) && !/qui vote|prospect|etablissement/.test(q));
-  if (law) return law.a + law.cites.map(([l, a]) => `<a class="cite" href="${CT}${a}" target="_blank" rel="noopener"><svg class="ic"><use href="#i-scale"/></svg>${l}<svg class="ic"><use href="#i-ext"/></svg></a>`).join(" ");
-  const mi = MONTHS.findIndex((m) => q.includes(norm(m)));
+  if (law) return law.a + law.cites.map(([l, a]) => `<a class="cite" href="${CT}${a}" target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="#i-scale"/></svg>${l}<svg class="ic" aria-hidden="true"><use href="#i-ext"/></svg></a>`).join(" ");
+  const mi = MONTHS.findIndex((m) => new RegExp(`(^|[^a-z])${norm(m)}([^a-z]|$)`).test(q)); // "maintenant" must not read as "mai"
   if (mi >= 0) {
     const m = `2027-${String(mi + 1).padStart(2, "0")}`;
     const rows = ROWS.filter((r) => r.mois === m).sort((a, b) => b.inscrits - a.inscrits);
@@ -602,11 +604,13 @@ function answer(qRaw) {
   }
   if (/gros|grand|plus d.electeurs|important/.test(q)) return `<p>Les CSE avec le plus d'électeurs, donc le plus d'élus à former :</p>${list([...ROWS].sort((a, b) => b.inscrits - a.inscrits))}`;
   if (/email|mail/.test(q)) { const r = ROWS.filter((x) => x.email); return `<p><b>${r.length}</b> établissements ont un email générique :</p>${list(r)}`; }
-  if (/maintenant|urgent|bientot|priorit|appeler/.test(q)) { const r = ROWS.filter((x) => isSoon(x.mois)).sort((a, b) => a.mois.localeCompare(b.mois)); return `<p><b>${r.length}</b> prospects votent dans les ${WINDOW} prochains mois.</p>${list(r)}<button class="btn primary" style="margin-top:10px" data-session type="button"><svg class="ic"><use href="#i-phone"/></svg>Lancer la session d'appels</button>`; }
+  if (/maintenant|urgent|bientot|priorit|appeler/.test(q)) { const r = ROWS.filter((x) => isSoon(x.mois)).sort((a, b) => a.mois.localeCompare(b.mois)); return `<p><b>${r.length}</b> prospects votent dans les ${WINDOW} prochains mois.</p>${list(r)}<button class="btn primary" style="margin-top:10px" data-session type="button"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg>Lancer la session d'appels</button>`; }
   const sec = [...new Set(ROWS.map((r) => r.secteur))].find((s) => norm(s).split(/[ ,]+/).some((w) => w.length > 4 && q.includes(w)));
   if (sec) { const r = ROWS.filter((x) => x.secteur === sec); return `<p><b>${r.length}</b> établissements en ${esc(sec.toLowerCase())} :</p>${list(r)}`; }
   const city = [...new Set(ROWS.map((r) => norm(r.ville).replace(/ \d+$/, "")))].sort((a, b) => b.length - a.length).find((c) => c.length > 2 && q.includes(c));
   if (city) { const r = ROWS.filter((x) => norm(x.ville).startsWith(city)); return `<p><b>${r.length}</b> établissements à ${esc(cityCase(city))} :</p>${list(r)}`; }
+  const asked = q.match(/(?:^|\s)a\s+([a-z' -]{3,})\s*\??$/);
+  if (asked) return `<p>Aucun établissement de votre liste à ${esc(cityCase(asked[1].trim()))}. La démo couvre 100 établissements en ${esc(D.region)}.</p>`;
   return "<p>Je sais répondre sur vos prospects (un mois, une ville, un secteur, les plus gros CSE, ceux à appeler maintenant) et sur quatre points du droit du CSE : durée du mandat, formation santé-sécurité, formation économique, référent harcèlement.</p>";
 }
 
@@ -616,11 +620,11 @@ function viewAssistant() {
     <div class="chat stag">
       <section class="chatbox" style="--i:1"><div class="msgs" id="msgs" aria-live="polite">
         <div class="msg bot"><p>Bonjour. Je connais vos ${ROWS.length} prospects et quatre points du droit du CSE. Choisissez une question dans la liste, ou écrivez la vôtre.</p></div></div>
-        <form class="composer" id="ask"><input id="askIn" placeholder="Ex. qui a droit à la formation économique ?" aria-label="Votre question" autocomplete="off"><button class="btn brand" aria-label="Envoyer"><svg class="ic"><use href="#i-send"/></svg></button></form>
+        <form class="composer" id="ask"><input id="askIn" placeholder="Ex. qui a droit à la formation économique ?" aria-label="Votre question" autocomplete="off"><button class="btn brand" aria-label="Envoyer"><svg class="ic" aria-hidden="true"><use href="#i-send"/></svg></button></form>
       </section>
       <aside class="side">
-        <div class="tile" style="--i:2"><h3><svg class="ic"><use href="#i-scale"/></svg>Droit du CSE</h3><div class="qs">${LAW.map((l) => `<button type="button" data-ask="${esc(l.q)}">${esc(l.q)}</button>`).join("")}</div></div>
-        <div class="tile" style="--i:3"><h3><svg class="ic"><use href="#i-spark"/></svg>Vos prospects</h3><div class="qs">${DATA_QS.map((q) => `<button type="button" data-ask="${esc(q)}">${esc(q)}</button>`).join("")}</div></div>
+        <div class="tile" style="--i:2"><h3><svg class="ic" aria-hidden="true"><use href="#i-scale"/></svg>Droit du CSE</h3><div class="qs">${LAW.map((l) => `<button type="button" data-ask="${esc(l.q)}">${esc(l.q)}</button>`).join("")}</div></div>
+        <div class="tile" style="--i:3"><h3><svg class="ic" aria-hidden="true"><use href="#i-spark"/></svg>Vos prospects</h3><div class="qs">${DATA_QS.map((q) => `<button type="button" data-ask="${esc(q)}">${esc(q)}</button>`).join("")}</div></div>
         <div class="tile" style="--i:4"><p>Réponses rédigées à partir du Code du travail, sans IA générative. Branché sur un modèle d'IA, cet assistant deviendrait l'outil quotidien des élus.</p></div>
       </aside>
     </div></div>`;
@@ -632,6 +636,7 @@ function ask(q) {
   const box = $("#msgs");
   box.insertAdjacentHTML("beforeend", `<div class="msg me">${esc(q)}</div><div class="msg bot typing"><i></i><i></i><i></i></div>`);
   box.scrollTo({ top: box.scrollHeight, behavior: "smooth" });
+  if (innerWidth <= 1080) $(".chatbox").scrollIntoView({ behavior: "smooth", block: "start" }); // questions sit below the chat on narrow screens
   setTimeout(() => {
     const t = $(".typing", box);
     if (!t) return;
@@ -687,8 +692,8 @@ function renderCmd() {
   cmdItems = [...pros.map((r) => ({ run: () => openSheet(r.siret) })), ...acts];
   cmdSel = Math.min(cmdSel, Math.max(0, cmdItems.length - 1));
   let k = 0;
-  $("#cmdList").innerHTML = (pros.length ? `<h4>${q ? "Établissements" : "À appeler maintenant"}</h4>` + pros.map((r) => `<button class="cmd-item" role="option" data-k="${k++}">${av(r)}<span class="who"><b>${esc(r.entreprise)}</b><span>${esc(cityCase(r.ville))} · ${monthLabel(r.mois)}</span></span><span class="r">${r.tel ? fmtTel(r.tel) : ""}</span></button>`).join("") : "")
-    + (acts.length ? `<h4>Actions</h4>` + acts.map((a) => `<button class="cmd-item" role="option" data-k="${k++}"><span class="ico"><svg class="ic"><use href="#${a.i}"/></svg></span><span>${esc(a.l)}</span><span class="r">↵</span></button>`).join("") : "")
+  $("#cmdList").innerHTML = (pros.length ? `<h4>${q ? "Établissements" : "À appeler maintenant"}</h4>` + pros.map((r) => `<button class="cmd-item" role="option" data-k="${k++}">${av(r)}<span class="who"><b>${esc(r.entreprise)}</b><span>${esc(cityCase(r.ville))}, ${monthLabel(r.mois)}</span></span><span class="r">${r.tel ? fmtTel(r.tel) : ""}</span></button>`).join("") : "")
+    + (acts.length ? `<h4>Actions</h4>` + acts.map((a) => `<button class="cmd-item" role="option" data-k="${k++}"><span class="ico"><svg class="ic" aria-hidden="true"><use href="#${a.i}"/></svg></span><span>${esc(a.l)}</span><span class="r">↵</span></button>`).join("") : "")
     || `<p class="cmd-empty">Aucun résultat pour « ${esc($("#cmdIn").value)} »</p>`;
   highlightCmd();
 }

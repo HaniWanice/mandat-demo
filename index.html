@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Mandat : le calendrier des élections CSE 2027 et la liste d'appels des organismes de formation. Démo privée.">
 <meta name="theme-color" content="#F5F5F7">
 <title>Mandat</title>
 <link rel="preload" href="fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
@@ -11,7 +12,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236D5BFF'/%3E%3Cstop offset='1' stop-color='%23FF5DA2'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='9' fill='url(%23g)'/%3E%3Cpath d='M9 22V11l7 6.5L23 11v11' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <defs>
     <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6D5BFF"/><stop offset="1" stop-color="#FF5DA2"/></linearGradient>
     <symbol id="logo" viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="url(#lg)"/><path d="M9 22V11l7 6.5L23 11v11" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
@@ -49,7 +50,7 @@
     <p>Le calendrier des élections CSE 2027.<br>Démo privée.</p>
     <div class="field">
       <input id="pw" type="password" required placeholder="Code d'accès" aria-label="Code d'accès" spellcheck="false" autocomplete="current-password">
-      <button class="go" type="submit" id="lockBtn" aria-label="Ouvrir"><svg class="ic"><use href="#i-arrow"/></svg></button>
+      <button class="go" type="submit" id="lockBtn" aria-label="Ouvrir"><svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></button>
     </div>
     <p id="lockErr" class="lock-err" role="alert">Code incorrect. Vérifiez les tirets.</p>
     <p class="lock-foot">Demandé une seule fois sur cet appareil.</p>
@@ -61,15 +62,15 @@
     <a class="brand" href="#/accueil" aria-label="Accueil"><svg aria-hidden="true"><use href="#logo"/></svg><span>Mandat</span></a>
     <nav class="tabs" id="tabs" aria-label="Navigation">
       <span class="tab-ind" id="tabInd" aria-hidden="true"></span>
-      <a href="#/accueil" data-view="accueil"><svg class="ic"><use href="#i-home"/></svg><span>Accueil</span></a>
-      <a href="#/prospects" data-view="prospects"><svg class="ic"><use href="#i-list"/></svg><span>Prospects</span></a>
-      <a href="#/calendrier" data-view="calendrier"><svg class="ic"><use href="#i-cal"/></svg><span>Calendrier</span></a>
-      <a href="#/assistant" data-view="assistant"><svg class="ic"><use href="#i-scale"/></svg><span>Assistant</span></a>
-      <a href="#/methode" data-view="methode"><svg class="ic"><use href="#i-book"/></svg><span>Méthode</span></a>
+      <a href="#/accueil" data-view="accueil"><svg class="ic" aria-hidden="true"><use href="#i-home"/></svg><span>Accueil</span></a>
+      <a href="#/prospects" data-view="prospects"><svg class="ic" aria-hidden="true"><use href="#i-list"/></svg><span>Prospects</span></a>
+      <a href="#/calendrier" data-view="calendrier"><svg class="ic" aria-hidden="true"><use href="#i-cal"/></svg><span>Calendrier</span></a>
+      <a href="#/assistant" data-view="assistant"><svg class="ic" aria-hidden="true"><use href="#i-scale"/></svg><span>Assistant</span></a>
+      <a href="#/methode" data-view="methode"><svg class="ic" aria-hidden="true"><use href="#i-book"/></svg><span>Méthode</span></a>
     </nav>
     <div class="top-r">
-      <button class="kbtn" id="openCmd" type="button" data-tip="Chercher un établissement ou une action"><svg class="ic"><use href="#i-search"/></svg><span>Rechercher</span><kbd>Ctrl K</kbd></button>
-      <button class="iconbtn" id="logout" type="button" aria-label="Verrouiller" data-tip="Verrouiller cet appareil : le code sera redemandé. Votre suivi reste enregistré."><svg class="ic"><use href="#i-lock"/></svg></button>
+      <button class="kbtn" id="openCmd" type="button" data-tip="Chercher un établissement ou une action"><svg class="ic" aria-hidden="true"><use href="#i-search"/></svg><span>Rechercher</span><kbd>Ctrl K</kbd></button>
+      <button class="iconbtn" id="logout" type="button" aria-label="Verrouiller" data-tip="Verrouiller cet appareil : le code sera redemandé. Votre suivi reste enregistré."><svg class="ic" aria-hidden="true"><use href="#i-lock"/></svg></button>
     </div>
   </header>
   <main id="main" class="main" tabindex="-1"></main>
@@ -81,14 +82,14 @@
 
 <dialog id="cmd" class="cmd" aria-label="Recherche">
   <div class="cmd-in">
-    <label class="cmd-field"><svg class="ic"><use href="#i-search"/></svg><input id="cmdIn" placeholder="Établissement, ville, action…" autocomplete="off" spellcheck="false" aria-label="Rechercher"><kbd>Échap</kbd></label>
+    <label class="cmd-field"><svg class="ic" aria-hidden="true"><use href="#i-search"/></svg><input id="cmdIn" placeholder="Établissement, ville, action…" autocomplete="off" spellcheck="false" aria-label="Rechercher"><kbd>Échap</kbd></label>
     <div class="cmd-list" id="cmdList" role="listbox"></div>
   </div>
 </dialog>
 
 <div id="curtain" class="curtain" hidden aria-hidden="true">
   <div class="mesh"><i></i><i></i><i></i><i></i></div>
-  <div class="c-in"><svg class="c-logo"><use href="#logo"/></svg><span class="c-title" id="curtainTitle">Mandat</span><span class="c-sub" id="curtainSub"></span></div>
+  <div class="c-in"><svg class="c-logo" aria-hidden="true"><use href="#logo"/></svg><span class="c-title" id="curtainTitle">Mandat</span><span class="c-sub" id="curtainSub"></span></div>
 </div>
 <div id="tip" class="tip" role="tooltip"></div>
 <div id="toasts" class="toasts" aria-live="polite"></div>
