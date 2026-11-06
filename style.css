@@ -248,6 +248,7 @@ kbd { font: 500 11px var(--font-mono); color: var(--ink-2); background: var(--fi
 .mcol .n { font-size: 11px; font-weight: 600; color: var(--ink-2); text-align: center; white-space: nowrap; animation: up .64s var(--spring-soft) both; animation-delay: calc(var(--i) * 45ms + 300ms); }
 .mcol .m { height: 22px; font-size: var(--t-xs); color: var(--ink-3); text-align: center; }
 .mcol .m .ab { display: none; }
+.year .win .mbr { display: none; }
 @keyframes grow { from { transform: scaleY(0); } }
 .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: var(--t-xs); color: var(--ink-2); margin-top: 14px; }
 .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
@@ -606,6 +607,8 @@ kbd { font: 500 11px var(--font-mono); color: var(--ink-2); background: var(--fi
   .mcol .n { display: none; }
   .mcol .m .full { display: none; }
   .mcol .m .ab { display: inline; }
+  .year .win .mbr { display: inline; }
+  .year .win span { top: 8px; left: 8px; right: 6px; line-height: 1.25; white-space: normal; }
   .bar-tools { top: 57px; }
   .prow { grid-template-columns: 40px minmax(0, 1fr); gap: 4px 12px; padding: 12px; }
   .prow .c-tel, .prow .c-st { grid-column: 2; justify-content: flex-start; }

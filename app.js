@@ -230,7 +230,7 @@ function yearChart(months, { nav = true } = {}) {
   const all = Array.from({ length: 12 }, (_, i) => `2027-${String(i + 1).padStart(2, "0")}`);
   const max = Math.max(1, ...all.map((m) => map[m] || 0));
   const inWin = all.map((m, i) => [i, monthsUntil(m)]).filter(([, n]) => n >= 0 && n <= WINDOW).map(([i]) => i);
-  const win = inWin.length ? `<div class="win" style="left:calc(${inWin[0]} * (100% + var(--g)) / 12);width:calc(${inWin.length} * (100% + var(--g)) / 12 - var(--g))"><span>À appeler maintenant</span></div>` : "";
+  const win = inWin.length ? `<div class="win" style="left:calc(${inWin[0]} * (100% + var(--g)) / 12);width:calc(${inWin.length} * (100% + var(--g)) / 12 - var(--g))"><span>À appeler<br class="mbr"> maintenant</span></div>` : "";
   return `<div class="year">${win}${all.map((m, i) => {
     const n = map[m] || 0;
     const cls = inWin.includes(i) ? "hot" : m <= "2027-06" ? "s1" : "";
